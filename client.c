@@ -10,7 +10,8 @@
 #define PORT_NO 5678
 
 void printError(char* message);
-void printMenu();
+void printMenu();       //print the user menu
+void choiceRouter();    //route user's choice
 
 void main(int args, char* argv[]) {
     int socketfd;
@@ -37,6 +38,9 @@ void main(int args, char* argv[]) {
     if (connect(socketfd,(struct sockaddr*) &serv_addr, sizeof(serv_addr)) == CONNECT_ERROR) {
         printError("Host not found!");
     }
+    else {
+        printMenu();
+    }
 
 
 }
@@ -44,4 +48,13 @@ void main(int args, char* argv[]) {
 void printError(char* message) {
     printf("%s", message);
     exit(1);
+}
+
+void printMenu() {
+    //TODO:
+    printf("%s\n", );
+}
+
+void choiceRouter() {
+    //TODO:
 }
