@@ -9,7 +9,8 @@
 
 #define PORT_NO 5678
 
-void perr(char* message);
+void printError(char* message);
+void printMenu();
 
 void main(int args, char* argv[]) {
     int socketfd;
@@ -18,13 +19,13 @@ void main(int args, char* argv[]) {
 
     socketfd = socket(AF_INET, SOCK_STREAM, 0);
     if (&socketfd == NULL) {
-        perr("Socket build error!");
+        printError("Socket build error!");
     }
 
     // analyze the hostname to find address
     server_info = gethostbyname(argv[1]);
     if (server_info == NULL) {
-        perr("Host not found!");
+        printError("Host not found!");
     }
 
     memset(&serv_addr, 0, sizeof(serv_addr));
@@ -34,13 +35,13 @@ void main(int args, char* argv[]) {
     serv_addr.sin_port = htons(PORT_NO);
 
     if (connect(socketfd,(struct sockaddr*) &serv_addr, sizeof(serv_addr)) == CONNECT_ERROR) {
-        perr("Host not found!");
+        printError("Host not found!");
     }
 
-    
+
 }
 
-void perr(char* message) {
+void printError(char* message) {
     printf("%s", message);
     exit(1);
 }

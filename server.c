@@ -22,15 +22,15 @@ int main() {
 
     // bind socket
     int socketfd = socket(AF_INET, SOCK_STREAM, 0);
-    int binding = bind (socketfd, (struct sock_addr*) &serv_addr, sizeof(serv_addr));
+    int binding = bind (socketfd, (struct sockaddr*) &serv_addr,(socklen_t) sizeof(serv_addr));
     if (binding == BIND_ERROR) {    //if bind is error
         printf("Socket binding error!");
     }
     else {
         listen (socketfd, 1);
     }
-
-    int newsocketfd = accept(socketfd, (struct sock_addr*) &cli_addr, sizeof(cli_addr));
+    socklen_t clilen = sizeof(cli_addr);
+    int newsocketfd = accept(socketfd, (struct sockaddr*) &cli_addr,&clilen);
     if (newsocketfd == ACCEPT_ERROR) {  //if accept is error
         printf("Socket accept error!");
     }
