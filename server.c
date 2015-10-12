@@ -3,6 +3,8 @@
 #include <string.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
+#include <unistd.h>
+#include "packet.h"
 
 #define BIND_ERROR -1
 #define ACCEPT_ERROR -1
@@ -35,8 +37,9 @@ int main() {
         printf("Socket accept error!");
     }
     else {
-        printf("the client IP is: %d", cli_addr.sin_addr.s_addr);
+        printf("the client IP is: %d\n", cli_addr.sin_addr.s_addr);
     }
-
+    close(socketfd);
+    close(newsocketfd);
     return 0;   //main() return 0
 }

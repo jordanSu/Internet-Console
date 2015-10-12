@@ -4,10 +4,14 @@
 #include <sys/socket.h>     //socket()
 #include <netdb.h>  //struct hostent
 #include <netinet/in.h>  //struct sockaddr_in
+#include <unistd.h>
+#include "packet.h"
 
 #define CONNECT_ERROR -1
 
 #define PORT_NO 5678
+
+struct packet buffer;
 
 void printError(char* message);
 void printMenu();       //print the user menu
@@ -42,18 +46,38 @@ int main(int args, char* argv[]) {
         printMenu();
         choiceRouter();
     }
-
+    close(socketfd);
     return 0;
 }
 
-void createFile(){};
-void editFile(){};
-void removeFile(){};
-void listFile(){};
-void download(){};
+void createFile(){
+    //TODO: not yet complete
+    char fileName[256];
+    printf("Please input fileName: ");
+    scanf("%s",fileName);
+    printf("Your fileName is: %s\n",fileName);
+    memset(&buffer, 0, sizeof(buffer));
+    write(socketfd, buffer, sizeof(buffer));
+}
+
+void editFile(){
+
+}
+
+void removeFile(){
+
+}
+
+void listFile(){
+
+}
+
+void download(){
+
+}
 
 void printError(char* message) {
-    printf("%s", message);
+    printf("%s\n", message);
     exit(1);
 }
 
@@ -70,13 +94,13 @@ void printMenu() {
     printf("%s\n", "(L)ist");
     printf("%s\n", "(D)ownload");
     printf("%s\n", "################################################");
-    printf("%s\n", "Which do you want to choose? (C, E, R, L, D): ");
+    printf("%s", "Which do you want to choose? (C, E, R, L, D): ");
 }
 
 void choiceRouter() {
     //TODO:
     char choice;
-    scanf("%c",choice);
+    scanf("%c",&choice);
     switch (choice) {
         case 'C':
         case 'c':
