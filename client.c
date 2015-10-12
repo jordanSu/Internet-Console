@@ -13,7 +13,7 @@ void printError(char* message);
 void printMenu();       //print the user menu
 void choiceRouter();    //route user's choice
 
-void main(int args, char* argv[]) {
+int main(int args, char* argv[]) {
     int socketfd;
     struct sockaddr_in serv_addr;
     struct hostent* server_info;
@@ -40,10 +40,17 @@ void main(int args, char* argv[]) {
     }
     else {
         printMenu();
+        choiceRouter();
     }
 
-
+    return 0;
 }
+
+void createFile(){};
+void editFile(){};
+void removeFile(){};
+void listFile(){};
+void download(){};
 
 void printError(char* message) {
     printf("%s", message);
@@ -52,9 +59,46 @@ void printError(char* message) {
 
 void printMenu() {
     //TODO:
-    printf("%s\n", );
+    printf("%s\n", "################################################");
+    printf("%s\n", "           Welcome to Internet editor           ");
+    printf("%s\n", "################################################");
+    printf("%s\n", "   There are some option you can choose below   ");
+    printf("%s\n", "################################################");
+    printf("%s\n", "(C)reate");
+    printf("%s\n", "(E)dit");
+    printf("%s\n", "(R)emove");
+    printf("%s\n", "(L)ist");
+    printf("%s\n", "(D)ownload");
+    printf("%s\n", "################################################");
+    printf("%s\n", "Which do you want to choose? (C, E, R, L, D): ");
 }
 
 void choiceRouter() {
     //TODO:
+    char choice;
+    scanf("%c",choice);
+    switch (choice) {
+        case 'C':
+        case 'c':
+            createFile();
+            break;
+        case 'E':
+        case 'e':
+            editFile();
+            break;
+        case 'R':
+        case 'r':
+            removeFile();
+            break;
+        case 'L':
+        case 'l':
+            listFile();
+            break;
+        case 'D':
+        case 'd':
+            download();
+            break;
+        default:
+            printf("Selection not found!");
+    }
 }
