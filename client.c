@@ -11,16 +11,20 @@
 
 #define PORT_NO 5678
 
-struct packet buffer;
 
 void printError(char* message);
 void printMenu();       //print the user menu
 void choiceRouter();    //route user's choice
 
+struct packet_content buffer;
+char* packet;
+int socketfd;
+
+
 int main(int args, char* argv[]) {
-    int socketfd;
     struct sockaddr_in serv_addr;
     struct hostent* server_info;
+    packet = (unsigned char*)malloc(sizeof(buffer));
 
     socketfd = socket(AF_INET, SOCK_STREAM, 0);
     if (&socketfd == NULL) {
@@ -57,7 +61,10 @@ void createFile(){
     scanf("%s",fileName);
     printf("Your fileName is: %s\n",fileName);
     memset(&buffer, 0, sizeof(buffer));
-    write(socketfd, buffer, sizeof(buffer));
+    buffer.command = 'C';
+    strncpy(buffer.content, fileName, sizeof(fileName));
+    memcpy(packet, &buffer, sizeof(buffer));
+    write(socketfd, packet, sizeof(buffer));
 }
 
 void editFile(){
