@@ -11,8 +11,13 @@
 
 #define PORT_NO 5678
 
+struct packet_content buffer;
+char* packet;
+
 int main() {
     struct sockaddr_in serv_addr, cli_addr;
+    packet = (unsigned char*)malloc(sizeof(buffer));
+    int receive_choice;
 
     // flush serv_addr with zero
     memset((char*) &serv_addr, 0, sizeof(serv_addr));
@@ -38,6 +43,17 @@ int main() {
     }
     else {
         printf("the client IP is: %d\n", cli_addr.sin_addr.s_addr);
+    }
+    while (read(newsocketfd, packet, sizeof(buffer))) {
+        memset(&buffer, 0, sizeof(buffer));
+        memcpy(&buffer, packet, sizeof(buffer));
+        receive_choice = buffer.command;
+        switch (receive_choice) {
+            case 'C':
+                printf("Hi");
+            default:
+                printf("No good!");
+        }
     }
     close(socketfd);
     close(newsocketfd);
