@@ -46,9 +46,8 @@ int main(int args, char* argv[]) {
     if (connect(socketfd,(struct sockaddr*) &serv_addr, sizeof(serv_addr)) == CONNECT_ERROR) {
         printError("Host not found!");
     }
-    else {
+    while (1) {
         printMenu();
-        choiceRouter();
     }
     close(socketfd);
     return 0;
@@ -65,6 +64,7 @@ void createFile(){
     strncpy(buffer.content, fileName, sizeof(fileName));
     memcpy(packet, &buffer, sizeof(buffer));
     write(socketfd, packet, sizeof(buffer));
+    printMenu();
 }
 
 void editFile(){
@@ -102,6 +102,7 @@ void printMenu() {
     printf("%s\n", "(D)ownload");
     printf("%s\n", "################################################");
     printf("%s", "Which do you want to choose? (C, E, R, L, D): ");
+    choiceRouter();
 }
 
 void choiceRouter() {
