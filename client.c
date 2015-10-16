@@ -40,7 +40,7 @@ int main(int args, char* argv[]) {
     memset(&serv_addr, 0, sizeof(serv_addr));
     serv_addr.sin_family = AF_INET;
     memcpy(&serv_addr.sin_addr.s_addr, server_info->h_addr, sizeof(server_info->h_addr));
-    printf ("this is address:%d",serv_addr.sin_addr.s_addr);
+    //printf ("this is address:%d",serv_addr.sin_addr.s_addr);
     serv_addr.sin_port = htons(PORT_NO);
 
     if (connect(socketfd,(struct sockaddr*) &serv_addr, sizeof(serv_addr)) == CONNECT_ERROR) {
