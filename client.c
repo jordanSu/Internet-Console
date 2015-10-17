@@ -54,7 +54,6 @@ int main(int args, char* argv[]) {
 }
 
 void createFile(){
-    //TODO: not yet complete
     char fileName[256];
     printf("Please input fileName: ");
     scanf("%s",fileName);
@@ -64,7 +63,6 @@ void createFile(){
     strncpy(buffer.content, fileName, sizeof(fileName));
     memcpy(packet, &buffer, sizeof(buffer));
     write(socketfd, packet, sizeof(buffer));
-    printMenu();
 }
 
 void editFile(){
@@ -72,7 +70,15 @@ void editFile(){
 }
 
 void removeFile(){
-
+    char fileName[256];
+    printf("Please input fileName: ");
+    scanf("%s",fileName);
+    printf("Your fileName is: %s\n",fileName);
+    memset(&buffer, 0, sizeof(buffer));
+    buffer.command = 'R';
+    strncpy(buffer.content, fileName, sizeof(fileName));
+    memcpy(packet, &buffer, sizeof(buffer));
+    write(socketfd, packet, sizeof(buffer));
 }
 
 void listFile(){
@@ -108,7 +114,7 @@ void printMenu() {
 void choiceRouter() {
     //TODO:
     char choice;
-    scanf("%c",&choice);
+    scanf("\n%c",&choice);
     switch (choice) {
         case 'C':
         case 'c':
@@ -131,6 +137,6 @@ void choiceRouter() {
             download();
             break;
         default:
-            printf("Selection not found!");
+            printf("Selection not found\n");
     }
 }

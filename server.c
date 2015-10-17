@@ -86,7 +86,6 @@ int main() {
 }
 
 void createFile(char* content) {
-
     char* command = (char*)malloc(strlen(content) + 6);
     strcat(command, "touch ");
     strcat(command, content);
@@ -104,7 +103,16 @@ void editFile(char* content) {
 }
 
 void removeFile(char* content) {
+    char* command = (char*)malloc(strlen(content) + 3);
+    strcat(command, "rm ");
+    strcat(command, content);
 
+    if (system(command) != 0) {
+        printError("Remove File Error!");
+    }
+    else {
+        printf("File %s removed\n", content);
+    }
 }
 
 void listFile() {
