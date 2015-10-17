@@ -106,7 +106,7 @@ void editFile(char* content) {
     //strcat(command, " ]")
 
     if (system(command) != 0) {
-        printf("File not exist!");
+        printf("File not exist!\n");
         sendpacket(newsocketfd, 'E', "no");
     }
     else {

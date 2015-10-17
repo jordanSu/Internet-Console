@@ -71,7 +71,7 @@ void editFile(){
     printf("Your fileName is: %s\n",fileName);
     sendpacket(socketfd, 'E', fileName);
     readpacket(socketfd);
-    if (strcmp(buffer.content, "no"))
+    if (strcmp(buffer.content, "no") == 0)
         printf("File not existed!\n");
     /*
     memset(&buffer, 0, sizeof(buffer));
