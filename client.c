@@ -73,14 +73,9 @@ void editFile(){
     readpacket(socketfd);
     if (strcmp(buffer.content, "no") == 0)
         printf("File not existed!\n");
-    /*
-    memset(&buffer, 0, sizeof(buffer));
-    buffer.command = 'E';
-    strncpy(buffer.content, fileName, sizeof(fileName));
-    memcpy(packet, &buffer, sizeof(buffer));
-    write(socketfd, packet, sizeof(buffer));
-    read(socketfd, packet, sizeof(buffer));
-    */
+    else {
+
+    }
 }
 
 void removeFile(){
@@ -89,13 +84,6 @@ void removeFile(){
     scanf("%s",fileName);
     printf("Your fileName is: %s\n",fileName);
     sendpacket(socketfd, 'R', fileName);
-    /*
-    memset(&buffer, 0, sizeof(buffer));
-    buffer.command = 'R';
-    strncpy(buffer.content, fileName, sizeof(fileName));
-    memcpy(packet, &buffer, sizeof(buffer));
-    write(socketfd, packet, sizeof(buffer));
-    */
 }
 
 void listFile(){
@@ -113,6 +101,8 @@ void printError(char* message) {
 
 void printMenu() {
     //TODO:
+    system("read -p \"Press [Enter] key to Continue...\"");
+    system("clear");
     printf("%s\n", "################################################");
     printf("%s\n", "           Welcome to Internet editor           ");
     printf("%s\n", "################################################");
@@ -132,6 +122,7 @@ void choiceRouter() {
     //TODO:
     char choice;
     scanf("\n%c",&choice);
+    system("clear");
     switch (choice) {
         case 'C':
         case 'c':
