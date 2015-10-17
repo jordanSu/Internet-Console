@@ -70,6 +70,9 @@ void editFile(){
     scanf("%s",fileName);
     printf("Your fileName is: %s\n",fileName);
     sendpacket(socketfd, 'E', fileName);
+    readpacket(socketfd);
+    if (strcmp(buffer.content, "no"))
+        printf("File not existed!\n");
     /*
     memset(&buffer, 0, sizeof(buffer));
     buffer.command = 'E';

@@ -5,10 +5,14 @@ struct packet_content {     //packet format
     char content[1024];
 }buffer;
 
-void readpacket(int socketfd) {
-    read(socketfd, packet, sizeof(buffer));
-    memset(&buffer, 0, sizeof(buffer));
-    memcpy(&buffer, packet, sizeof(buffer));
+int readpacket(int socketfd) {
+    if (read(socketfd, packet, sizeof(buffer)) > 0) {
+        memset(&buffer, 0, sizeof(buffer));
+        memcpy(&buffer, packet, sizeof(buffer));
+        return 0;
+    }
+    else
+        return 1;
 }
 
 void sendpacket(int socketfd, char command, char* content) {

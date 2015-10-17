@@ -51,9 +51,7 @@ int main() {
         printf("the client IP is: %d\n", cli_addr.sin_addr.s_addr);
     }
     while (1) {
-        if (read(newsocketfd, packet, sizeof(buffer)) > 0) {
-            memset(&buffer, 0, sizeof(buffer));
-            memcpy(&buffer, packet, sizeof(buffer));
+        if (readpacket(newsocketfd) == 0) {
             receive_choice = buffer.command;
             switch (receive_choice) {
                 case 'C':
@@ -106,14 +104,18 @@ void editFile(char* content) {
 
     if (system(command) != 0) {
         printf("File not exist!");
+        sendpacket(newsocketfd, 'E', "no");
     }
     else {
         printf("File %s found\n", content);
+        sendpacket(newsocketfd, 'E', "ok");
+        /*
         memset(&buffer, 0, sizeof(buffer));
         buffer.command = 'E';
         strncpy(buffer.content, "ok", 2);
         memcpy(packet, &buffer, sizeof(buffer));
         write(newsocketfd, packet, sizeof(buffer));
+        */
     }
 }
 
