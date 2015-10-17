@@ -66,7 +66,15 @@ void createFile(){
 }
 
 void editFile(){
-
+    char fileName[256];
+    printf("Please input fileName: ");
+    scanf("%s",fileName);
+    printf("Your fileName is: %s\n",fileName);
+    memset(&buffer, 0, sizeof(buffer));
+    buffer.command = 'E';
+    strncpy(buffer.content, fileName, sizeof(fileName));
+    memcpy(packet, &buffer, sizeof(buffer));
+    write(socketfd, packet, sizeof(buffer));
 }
 
 void removeFile(){

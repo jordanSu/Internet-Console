@@ -99,7 +99,18 @@ void createFile(char* content) {
 }
 
 void editFile(char* content) {
+    char* command = (char*)malloc(strlen(content) + 8);
+    strcat(command, "test -e ");
+    strcat(command, content);
 
+    //strcat(command, " ]")
+
+    if (system(command) != 0) {
+        printf("File not exist!");
+    }
+    else {
+        printf("File %s found\n", content);
+    }
 }
 
 void removeFile(char* content) {
