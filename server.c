@@ -84,19 +84,22 @@ int main() {
 
 void createFile(char* content) {
     char* command = (char*)malloc(strlen(content) + 6);
+    memset(command, 0, sizeof(strlen(content) + 6));
     strcat(command, "touch ");
     strcat(command, content);
-
+    printf("%s", command);
     if (system(command) != 0) {
         printError("Create File Error!");
     }
     else {
         printf("File %s created\n", content);
     }
+    free(command);
 }
 
 void editFile(char* content) {
     char* command = (char*)malloc(strlen(content) + 8);
+    memset(command, 0, sizeof(strlen(content) + 8));
     strcat(command, "test -e ");
     strcat(command, content);
 
@@ -117,10 +120,12 @@ void editFile(char* content) {
         write(newsocketfd, packet, sizeof(buffer));
         */
     }
+    free(command);
 }
 
 void removeFile(char* content) {
     char* command = (char*)malloc(strlen(content) + 3);
+    memset(command, 0, sizeof(strlen(content) + 3));
     strcat(command, "rm ");
     strcat(command, content);
 
@@ -130,6 +135,7 @@ void removeFile(char* content) {
     else {
         printf("File %s removed\n", content);
     }
+    free(command);
 }
 
 void listFile() {
