@@ -11,8 +11,7 @@
 
 #define PORT_NO 5678
 
-struct packet_content buffer;
-char* packet;
+int newsocketfd;
 
 void printError(char*);
 void createFile(char*);
@@ -44,7 +43,7 @@ int main() {
         listen (socketfd, 1);
     }
     socklen_t clilen = sizeof(cli_addr);
-    int newsocketfd = accept(socketfd, (struct sockaddr*) &cli_addr,&clilen);
+    newsocketfd = accept(socketfd, (struct sockaddr*) &cli_addr,&clilen);
     if (newsocketfd == ACCEPT_ERROR) {  //if accept is error
         printError("Socket accept error!");
     }
@@ -110,6 +109,11 @@ void editFile(char* content) {
     }
     else {
         printf("File %s found\n", content);
+        memset(&buffer, 0, sizeof(buffer));
+        buffer.command = 'E';
+        strncpy(buffer.content, "ok", 2);
+        memcpy(packet, &buffer, sizeof(buffer));
+        write(newsocketfd, packet, sizeof(buffer));
     }
 }
 

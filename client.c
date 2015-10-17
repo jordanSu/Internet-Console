@@ -11,15 +11,11 @@
 
 #define PORT_NO 5678
 
-
 void printError(char* message);
 void printMenu();       //print the user menu
 void choiceRouter();    //route user's choice
 
-struct packet_content buffer;
-char* packet;
 int socketfd;
-
 
 int main(int args, char* argv[]) {
     struct sockaddr_in serv_addr;
@@ -58,11 +54,14 @@ void createFile(){
     printf("Please input fileName: ");
     scanf("%s",fileName);
     printf("Your fileName is: %s\n",fileName);
+    sendpacket(socketfd, 'C', fileName);
+    /*
     memset(&buffer, 0, sizeof(buffer));
     buffer.command = 'C';
     strncpy(buffer.content, fileName, sizeof(fileName));
     memcpy(packet, &buffer, sizeof(buffer));
     write(socketfd, packet, sizeof(buffer));
+    */
 }
 
 void editFile(){
@@ -70,11 +69,15 @@ void editFile(){
     printf("Please input fileName: ");
     scanf("%s",fileName);
     printf("Your fileName is: %s\n",fileName);
+    sendpacket(socketfd, 'E', fileName);
+    /*
     memset(&buffer, 0, sizeof(buffer));
     buffer.command = 'E';
     strncpy(buffer.content, fileName, sizeof(fileName));
     memcpy(packet, &buffer, sizeof(buffer));
     write(socketfd, packet, sizeof(buffer));
+    read(socketfd, packet, sizeof(buffer));
+    */
 }
 
 void removeFile(){
@@ -82,11 +85,14 @@ void removeFile(){
     printf("Please input fileName: ");
     scanf("%s",fileName);
     printf("Your fileName is: %s\n",fileName);
+    sendpacket(socketfd, 'R', fileName);
+    /*
     memset(&buffer, 0, sizeof(buffer));
     buffer.command = 'R';
     strncpy(buffer.content, fileName, sizeof(fileName));
     memcpy(packet, &buffer, sizeof(buffer));
     write(socketfd, packet, sizeof(buffer));
+    */
 }
 
 void listFile(){
