@@ -103,15 +103,19 @@ void editFile(char* content) {
     strcat(command, "test -e ");
     strcat(command, content);
 
-    //strcat(command, " ]")
-
     if (system(command) != 0) {
         printf("File not exist!\n");
         sendpacket(newsocketfd, 'E', "no");
     }
     else {
         printf("File %s found\n", content);
+        FILE* openFile;
+        openFile = fopen(content, "w");
         sendpacket(newsocketfd, 'E', "ok");
+        readpacket(newsocketfd);
+        fputs(buffer.content, openFile);
+        fclose(openFile);
+
         /*
         memset(&buffer, 0, sizeof(buffer));
         buffer.command = 'E';

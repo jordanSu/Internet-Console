@@ -74,6 +74,13 @@ void editFile(){
     if (strcmp(buffer.content, "no") == 0)
         printf("File not existed!\n");
     else {
+        printf("Please input the content below:\n");
+        printf("===============================\n");
+        //TODO: get user input for edit file
+        char edit_Content [1024];
+        scanf("%s", edit_Content);
+        sendpacket(socketfd, 'E', edit_Content);
+
 
     }
 }
