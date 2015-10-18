@@ -5,6 +5,7 @@
 #include <netdb.h>  //struct hostent
 #include <netinet/in.h>  //struct sockaddr_in
 #include <unistd.h>
+#include <dirent.h>
 #include "packet.h"
 
 #define CONNECT_ERROR -1
@@ -78,7 +79,8 @@ void editFile(){
         printf("===============================\n");
         //TODO: get user input for edit file
         char edit_Content [1024];
-        scanf("%s", edit_Content);
+        scanf("\n");
+        fgets(edit_Content, 1024, stdin);
         sendpacket(socketfd, 'E', edit_Content);
 
 
@@ -94,7 +96,15 @@ void removeFile(){
 }
 
 void listFile(){
-
+    DIR* d;
+    struct dirent* dir;
+    d = opendir(".");
+    if (d) {
+        while (dir = readdir(d) != NULL) {
+            printf("%s\n", dir->d_name);
+        }
+        closedir(d);
+    }
 }
 
 void download(){
