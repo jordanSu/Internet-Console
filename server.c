@@ -4,6 +4,7 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <unistd.h>
+#include <dirent.h>
 #include "packet.h"
 
 #define BIND_ERROR -1
@@ -143,7 +144,15 @@ void removeFile(char* content) {
 }
 
 void listFile() {
-
+    DIR* d;
+    struct dirent* dir;
+    d = opendir(".");
+    if (d) {
+        while ((dir = readdir(d)) != NULL) {
+            printf("%s\n", dir->d_name);
+        }
+        closedir(d);
+    }
 }
 
 void downloadFile() {
