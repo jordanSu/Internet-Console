@@ -18,7 +18,7 @@ void choiceRouter();    //route user's choice
 
 int socketfd;
 
-int main(int args, char* argv[]) {
+void main(int args, char* argv[]) {
     struct sockaddr_in serv_addr;
     struct hostent* server_info;
     packet = (unsigned char*)malloc(sizeof(buffer));
@@ -47,7 +47,6 @@ int main(int args, char* argv[]) {
         printMenu();
     }
     close(socketfd);
-    return 0;
 }
 
 void createFile(){
@@ -56,13 +55,6 @@ void createFile(){
     scanf("%s",fileName);
     printf("Your fileName is: %s\n",fileName);
     sendpacket(socketfd, 'C', fileName);
-    /*
-    memset(&buffer, 0, sizeof(buffer));
-    buffer.command = 'C';
-    strncpy(buffer.content, fileName, sizeof(fileName));
-    memcpy(packet, &buffer, sizeof(buffer));
-    write(socketfd, packet, sizeof(buffer));
-    */
 }
 
 void editFile(){
@@ -100,7 +92,32 @@ void listFile(){
 }
 
 void download(){
-
+    char fileName[256];
+    printf("Please input fileName: ");
+    scanf("%s",fileName);
+    printf("Your fileName is: %s\n",fileName);
+    sendpacket(socketfd, 'D', fileName);
+    readpacket(socketfd);
+    if (buffer.command == 'N')
+        printf("File %s not found", fileName);
+    else if (buffer.command == 'Y') {
+        system("mkdir received");
+        char* file_path = (char*)malloc(sizeof(fileName) + 11);
+        memset(file_path, 0, sizeof(fileName) + 11);
+        strcpy(file_path, "./received/");
+        strcat(file_path, fileName);
+        FILE* writeFile;
+        writeFile = fopen(file_path, "w");
+        while(1) {
+            readpacket(socketfd);
+            if (buffer.command == 'D')
+                fputs(buffer.content, writeFile);
+            else if (buffer.command == 'Y')
+                break;
+        }
+        fclose(writeFile);
+        free(file_path);
+    }
 }
 
 void printError(char* message) {

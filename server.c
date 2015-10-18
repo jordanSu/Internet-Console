@@ -19,9 +19,9 @@ void createFile(char*);
 void editFile(char*);
 void removeFile(char*);
 void listFile();
-void downloadFile();
+void downloadFile(char*);
 
-int main() {
+void main() {
     struct sockaddr_in serv_addr, cli_addr;
     packet = (unsigned char*)malloc(sizeof(buffer));
     int receive_choice;
@@ -68,7 +68,7 @@ int main() {
                     listFile();
                     break;
                 case 'D':
-                    downloadFile();
+                    downloadFile(buffer.content);
                     break;
                 default:
                     printf("Not good!");
@@ -80,7 +80,6 @@ int main() {
     }
     close(socketfd);
     close(newsocketfd);
-    return 0;   //main() return 0
 }
 
 void createFile(char* content) {
@@ -116,14 +115,6 @@ void editFile(char* content) {
         readpacket(newsocketfd);
         fputs(buffer.content, openFile);
         fclose(openFile);
-
-        /*
-        memset(&buffer, 0, sizeof(buffer));
-        buffer.command = 'E';
-        strncpy(buffer.content, "ok", 2);
-        memcpy(packet, &buffer, sizeof(buffer));
-        write(newsocketfd, packet, sizeof(buffer));
-        */
     }
     free(command);
 }
@@ -160,8 +151,32 @@ void listFile() {
     }
 }
 
-void downloadFile() {
+void downloadFile(char* content) {
+    char* command = (char*)malloc(strlen(content) + 8);
+    memset(command, 0, sizeof(strlen(content) + 8));
+    strcat(command, "test -e ");
+    strcat(command, content);
 
+    if (system(command) != 0) {
+        printf("File not exist!\n");
+        sendpacket(newsocketfd, 'N', "no");
+    }
+    else {
+        printf("File %s found\n", content);
+        FILE* openFile;
+        openFile = fopen(content, "r");
+        sendpacket(newsocketfd, 'Y', "ok");
+        char* piece = (char*)malloc(1024);
+        memset(piece, 0, 1024);
+        while (fgets(piece, 1024, openFile) != NULL) {
+            sendpacket(newsocketfd, 'D', piece);
+            memset(piece, 0, 1024);
+        }
+        sendpacket(newsocketfd, 'Y', "end");
+        fclose(openFile);
+        free(piece);
+    }
+    free(command);
 }
 
 void printError(char* message) {
