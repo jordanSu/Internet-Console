@@ -95,10 +95,12 @@ void removeFile(){
 
 void listFile(){
     sendpacket(socketfd, 'L', "123");
+    readpacket(socketfd);
+    printf("%s",buffer.content);
 }
 
 void download(){
-    
+
 }
 
 void printError(char* message) {
