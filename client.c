@@ -52,23 +52,26 @@ void createFile(){
     char fileName[256];
     printf("Please input fileName: ");
     scanf("%s",fileName);
-    printf("Your fileName is: %s\n",fileName);
     sendpacket(socketfd, 'C', fileName);
+    readpacket(socketfd);
+    if (strcmp(buffer.content, "ok") == 0)
+        printf("File %s created succcessful!", fileName);
+    else if (strcmp(buffer.content, "no") == 0)
+        printf("File %s created failed!", fileName);
+
 }
 
 void editFile(){
     char fileName[256];
     printf("Please input fileName: ");
     scanf("%s",fileName);
-    printf("Your fileName is: %s\n",fileName);
     sendpacket(socketfd, 'E', fileName);
     readpacket(socketfd);
     if (strcmp(buffer.content, "no") == 0)
         printf("File not existed!\n");
-    else {
-        printf("Please input the content below:\n");
-        printf("===============================\n");
-        //TODO: get user input for edit file
+    else if (strcmp(buffer.content, "ok") == 0){
+        printf("Please input the content for %s below:(1024 characters only)\n", fileName);
+        printf("============================================================\n");
         char edit_Content [1024];
         scanf("\n");
         fgets(edit_Content, 1024, stdin);
@@ -80,8 +83,12 @@ void removeFile(){
     char fileName[256];
     printf("Please input fileName: ");
     scanf("%s",fileName);
-    printf("Your fileName is: %s\n",fileName);
     sendpacket(socketfd, 'R', fileName);
+    readpacket(socketfd);
+    if (strcmp(buffer.content, "ok"))
+        printf("File %s removed succcessful!", fileName);
+    else if (strcmp(buffer.content, "no"))
+        printf("File %s removed failed!", fileName);
 }
 
 void listFile(){
@@ -95,12 +102,12 @@ void download(){
     printf("Please input fileName: ");
     scanf("%s",fileName);
     printf("Your fileName is: %s\n",fileName);
-    sendpacket(socketfd, 'D', fileName);
     readpacket(socketfd);
     if (buffer.command == 'N')
         printf("File %s not found", fileName);
     else if (buffer.command == 'Y') {
         system("mkdir received");
+        printf("File %s found, Downloading...\n", fileName);
         char* file_path = (char*)malloc(sizeof(fileName) + 11);
         memset(file_path, 0, sizeof(fileName) + 11);
         strcpy(file_path, "./received/");
@@ -111,8 +118,11 @@ void download(){
             readpacket(socketfd);
             if (buffer.command == 'D')
                 fputs(buffer.content, writeFile);
-            else if (buffer.command == 'Y')
+            else if (buffer.command == 'Y') {
+                printf("Download Completed!\n");
+                printf("File is stored at: %s", file_path);
                 break;
+            }
         }
         fclose(writeFile);
         free(file_path);

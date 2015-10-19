@@ -89,10 +89,12 @@ void createFile(char* content) {
     strcat(command, content);
     printf("%s", command);
     if (system(command) != 0) {
-        printError("Create File Error!");
+        printError("Create File %s Error!");
+        sendpacket(newsocketfd, 'C', "no");
     }
     else {
         printf("File %s created\n", content);
+        sendpacket(newsocketfd, 'C', "ok");
     }
     free(command);
 }
@@ -127,9 +129,11 @@ void removeFile(char* content) {
 
     if (system(command) != 0) {
         printError("Remove File Error!");
+        sendpacket(newsocketfd, 'R', "no");
     }
     else {
         printf("File %s removed\n", content);
+        sendpacket(newsocketfd, 'R', "ok");
     }
     free(command);
 }
@@ -149,6 +153,7 @@ void listFile() {
         sendpacket(newsocketfd, 'L', file_list);
         closedir(d);
     }
+    free(file_list);
 }
 
 void downloadFile(char* content) {
