@@ -46,7 +46,6 @@ void main(int args, char* argv[]) {
     while (1) {
         printMenu();
     }
-    close(socketfd);
 }
 
 void createFile(){
@@ -120,6 +119,10 @@ void download(){
     }
 }
 
+void zipFile() {
+
+}
+
 void printError(char* message) {
     printf("%s\n", message);
     exit(1);
@@ -139,8 +142,10 @@ void printMenu() {
     printf("%s\n", "(R)emove");
     printf("%s\n", "(L)ist");
     printf("%s\n", "(D)ownload");
+    printf("%s\n", "(Z)ip/Unzip");
+    printf("%s\n", "(B)ye Bye!");
     printf("%s\n", "################################################");
-    printf("%s", "Which do you want to choose? (C, E, R, L, D): ");
+    printf("%s", "Which do you want to choose? (C, E, R, L, D, Z, B): ");
     choiceRouter();
 }
 
@@ -150,26 +155,49 @@ void choiceRouter() {
     scanf("\n%c",&choice);
     system("clear");
     switch (choice) {
-        case 'C':
-        case 'c':
+        case 'C': case 'c':
+            printf("%s\n", "#####################");
+            printf("     Create File     ");
+            printf("\n%s\n", "#####################");
             createFile();
             break;
-        case 'E':
-        case 'e':
+        case 'E': case 'e':
+            printf("%s\n", "#####################");
+            printf("     Edit File     ");
+            printf("\n%s\n", "#####################");
             editFile();
             break;
-        case 'R':
-        case 'r':
+        case 'R': case 'r':
+            printf("%s\n", "#####################");
+            printf("     Remove File     ");
+            printf("\n%s\n", "#####################");
             removeFile();
             break;
-        case 'L':
-        case 'l':
+        case 'L': case 'l':
+            printf("%s\n", "#####################");
+            printf("     List File     ");
+            printf("\n%s\n", "#####################");
             listFile();
             break;
-        case 'D':
-        case 'd':
+        case 'D': case 'd':
+            printf("%s\n", "#####################");
+            printf("     Download File     ");
+            printf("\n%s\n", "#####################");
             download();
             break;
+        case 'Z': case 'z':
+            printf("%s\n", "#####################");
+            printf("     Zip/Unzip File     ");
+            printf("\n%s\n", "#####################");
+            zipFile();
+            break;
+        case 'B': case 'b':
+            system("clear");
+            system("echo 'Bye Bye~'");
+            system("read -p \"Press [Enter] key to Continue...\"");
+            system("clear");
+            close(socketfd);
+            exit(0);
         default:
             printf("Selection not found\n");
     }
