@@ -133,6 +133,10 @@ void zipFile() {
 
 }
 
+void secureFile() {
+    
+}
+
 void printError(char* message) {
     printf("%s\n", message);
     exit(1);
@@ -153,6 +157,7 @@ void printMenu() {
     printf("%s\n", "(L)ist");
     printf("%s\n", "(D)ownload");
     printf("%s\n", "(Z)ip/Unzip");
+    printf("%s\n", "(S)ecurity");
     printf("%s\n", "(B)ye Bye!");
     printf("%s\n", "################################################");
     printf("%s", "Which do you want to choose? (C, E, R, L, D, Z, B): ");
@@ -200,6 +205,12 @@ void choiceRouter() {
             printf("     Zip/Unzip File     ");
             printf("\n%s\n", "#####################");
             zipFile();
+            break;
+        case 'S': case 's':
+            printf("%s\n", "#####################");
+            printf("     Encrypt/Decrypt File     ");
+            printf("\n%s\n", "#####################");
+            secureFile();
             break;
         case 'B': case 'b':
             system("clear");
