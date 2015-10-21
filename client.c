@@ -25,13 +25,13 @@ void main(int args, char* argv[]) {
 
     socketfd = socket(AF_INET, SOCK_STREAM, 0);
     if (&socketfd == NULL) {
-        printError("Socket build error!");
+        printError("Socket build error!\n");
     }
 
     // analyze the hostname to find address
     server_info = gethostbyname(argv[1]);
     if (server_info == NULL) {
-        printError("Host not found!");
+        printError("Host not found!\n");
     }
 
     memset(&serv_addr, 0, sizeof(serv_addr));
@@ -41,7 +41,7 @@ void main(int args, char* argv[]) {
     serv_addr.sin_port = htons(PORT_NO);
 
     if (connect(socketfd,(struct sockaddr*) &serv_addr, sizeof(serv_addr)) == CONNECT_ERROR) {
-        printError("Host not found!");
+        printError("Host not found!\n");
     }
     while (1) {
         printMenu();
@@ -55,9 +55,9 @@ void createFile(){
     sendpacket(socketfd, 'C', fileName);
     readpacket(socketfd);
     if (strcmp(buffer.content, "ok") == 0)
-        printf("File %s created succcessful!", fileName);
+        printf("File %s created succcessful!\n", fileName);
     else if (strcmp(buffer.content, "no") == 0)
-        printf("File %s created failed!", fileName);
+        printf("File %s created failed!\n", fileName);
 
 }
 
@@ -85,10 +85,10 @@ void removeFile(){
     scanf("%s",fileName);
     sendpacket(socketfd, 'R', fileName);
     readpacket(socketfd);
-    if (strcmp(buffer.content, "ok"))
-        printf("File %s removed succcessful!", fileName);
-    else if (strcmp(buffer.content, "no"))
-        printf("File %s removed failed!", fileName);
+    if (strcmp(buffer.content, "ok") == 0)
+        printf("File %s removed succcessful!\n", fileName);
+    else if (strcmp(buffer.content, "no") == 0)
+        printf("File %s removed failed!\n", fileName);
 }
 
 void listFile(){
@@ -105,7 +105,7 @@ void download(){
     sendpacket(socketfd, 'D', fileName);
     readpacket(socketfd);
     if (buffer.command == 'N')
-        printf("File %s not found", fileName);
+        printf("File %s not found\n", fileName);
     else if (buffer.command == 'Y') {
         system("mkdir received");
         printf("File %s found, Downloading...\n", fileName);
@@ -118,10 +118,10 @@ void download(){
         while(1) {
             readpacket(socketfd);
             if (buffer.command == 'D')
-                fputs(buffer.content, writeFile);
+                fwrite(buffer.content, sizeof(char), 1024, writeFile);
             else if (buffer.command == 'Y') {
                 printf("Download Completed!\n");
-                printf("File is stored at: %s", file_path);
+                printf("File is stored at: %s\n", file_path);
                 break;
             }
         }
@@ -149,8 +149,8 @@ void zipFile() {
 
 void secureFile() {
     char choice;
-    char fileName[256];
-    char password[100];
+    char fileName[256] = {0};
+    char password[100] = {0};
 
     printf("Do you want (E)ncrypt or (D)ecrypt file?\n");
     printf("Please input E or D: ");

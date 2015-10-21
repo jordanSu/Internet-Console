@@ -196,7 +196,7 @@ void downloadFile(char* content) {
         sendpacket(newsocketfd, 'Y', "ok");
         char* piece = (char*)malloc(1024);
         memset(piece, 0, 1024);
-        while (fgets(piece, 1024, openFile) != NULL) {
+        while (fread(piece, sizeof(char), 1024, openFile) != NULL) {
             sendpacket(newsocketfd, 'D', piece);
             memset(piece, 0, 1024);
         }
@@ -238,17 +238,22 @@ void unzipFile(char* content) {
 }
 
 void encryptFile(char* content) {
-    char* command = (char*)malloc(strlen(content) + 100);
-    memset(command, 0, strlen(content) + 100);
+    char* filename = (char*)malloc(sizeof(content));
+    memcpy(filename, content, sizeof(content));
+    char* command = (char*)malloc(strlen(filename) + 100);
+    memset(command, 0, strlen(filename) + 100);
     strcpy(command, "echo ");
+    printf("The file name is %s\n", filename);
 
     //passphrase put in
     readpacket(newsocketfd);
     strcat(command, buffer.content);
 
-    strcat(command, " | gpg --passphrase-fd 0 -c ");
-    strcat(command, content);
+    printf("The file name is %s\n", filename);
+    strcat(command, " | gpg --yes --passphrase-fd 0 -c ");
+    strcat(command, filename);
 
+    printf("The command is %s\n", command);
     if (system(command) != 0) {
         printf("Encrypt File Error!");
         sendpacket(newsocketfd, 'U', "Encrypt File Error!");
@@ -257,9 +262,12 @@ void encryptFile(char* content) {
         sendpacket(newsocketfd, 'U', "Encrypt File succcessful!");
     }
     free(command);
+    free(filename);
 }
 
 void decryptFile(char* content) {
+    char* filename = (char*)malloc(sizeof(content));
+    memcpy(filename, content, sizeof(content));
     char* command = (char*)malloc(strlen(content) + 100);
     memset(command, 0, strlen(content) + 100);
     strcpy(command, "echo ");
@@ -268,8 +276,8 @@ void decryptFile(char* content) {
     readpacket(newsocketfd);
     strcat(command, buffer.content);
 
-    strcat(command, " | gpg --passphrase-fd 0 ");
-    strcat(command, content);
+    strcat(command, " | gpg --yes --passphrase-fd 0 ");
+    strcat(command, filename);
 
     if (system(command) != 0) {
         printf("Decrypt File Error!");
@@ -279,6 +287,7 @@ void decryptFile(char* content) {
         sendpacket(newsocketfd, 'U', "Decrypt File succcessful!");
     }
     free(command);
+    free(filename);
 }
 
 
