@@ -102,6 +102,7 @@ void download(){
     printf("Please input fileName: ");
     scanf("%s",fileName);
     printf("Your fileName is: %s\n",fileName);
+    sendpacket(socketfd, 'D', fileName);
     readpacket(socketfd);
     if (buffer.command == 'N')
         printf("File %s not found", fileName);
@@ -130,11 +131,46 @@ void download(){
 }
 
 void zipFile() {
-
+    char choice;
+    char fileName[256];
+    printf("Do you want (Z)ip or (U)nzip file?\n");
+    printf("Please input Z or U: ");
+    scanf("\n%c", &choice);
+    if (choice == 'Z')
+        sendpacket(socketfd, 'Z', "zip");
+    else if (choice == 'U')
+        sendpacket(socketfd, 'Z', "unzip");
+    printf("Please input your file name: ");
+    scanf("%s", fileName);
+    sendpacket(socketfd, 'Z', fileName);
+    readpacket(socketfd);
+    printf("%s\n", buffer.content);
 }
 
 void secureFile() {
-    
+    char choice;
+    char fileName[256];
+    char password[100];
+
+    printf("Do you want (E)ncrypt or (D)ecrypt file?\n");
+    printf("Please input E or D: ");
+    scanf("\n%c", &choice);
+
+    if (choice == 'E')
+        sendpacket(socketfd, 'S', "encrypt");
+    else if (choice == 'D')
+        sendpacket(socketfd, 'S', "decrypt");
+
+    printf("Please input your file name: ");
+    scanf("%s", fileName);
+    sendpacket(socketfd, 'S', fileName);
+
+    printf("Please input your passphrase: ");
+    scanf("%s", password);
+    sendpacket(socketfd, 'P', password);
+
+    readpacket(socketfd);
+    printf("%s\n", buffer.content);
 }
 
 void printError(char* message) {

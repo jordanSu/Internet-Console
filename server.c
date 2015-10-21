@@ -20,6 +20,10 @@ void editFile(char*);
 void removeFile(char*);
 void listFile();
 void downloadFile(char*);
+void zipFile(char*);
+void unzipFile(char*);
+void encryptFile(char*);
+void decryptFile(char*);
 
 void main() {
     struct sockaddr_in serv_addr, cli_addr;
@@ -69,6 +73,26 @@ void main() {
                     break;
                 case 'D':
                     downloadFile(buffer.content);
+                    break;
+                case 'Z':
+                    if (strcmp(buffer.content, "zip") == 0) {
+                        readpacket(newsocketfd);
+                        zipFile(buffer.content);
+                    }
+                    else if (strcmp(buffer.content, "unzip") == 0) {
+                        readpacket(newsocketfd);
+                        unzipFile(buffer.content);
+                    }
+                    break;
+                case 'S':
+                    if (strcmp(buffer.content, "encrypt") == 0) {
+                        readpacket(newsocketfd);
+                        encryptFile(buffer.content);
+                    }
+                    else if (strcmp(buffer.content, "decrypt") == 0) {
+                        readpacket(newsocketfd);
+                        decryptFile(buffer.content);
+                    }
                     break;
                 default:
                     printf("Not good!");
@@ -148,7 +172,6 @@ void listFile() {
         while ((dir = readdir(d)) != NULL) {
             strncat(file_list, dir->d_name, sizeof(dir->d_name));
             strncat(file_list, "\n", 1);
-            //printf("%s\n", dir->d_name);
         }
         sendpacket(newsocketfd, 'L', file_list);
         closedir(d);
@@ -183,6 +206,81 @@ void downloadFile(char* content) {
     }
     free(command);
 }
+
+void zipFile(char* content) {
+    char* command = (char*)malloc(strlen(content) + 9);
+    memset(command, 0, strlen(content) + 9);
+    strcpy(command, "bzip2 -z ");
+    strcat(command, content);
+    if (system(command) != 0) {
+        printf("Compress File Error!");
+        sendpacket(newsocketfd, 'Z', "no");
+    }
+    else {
+        sendpacket(newsocketfd, 'Z', "ok");
+    }
+    free(command);
+}
+
+void unzipFile(char* content) {
+    char* command = (char*)malloc(strlen(content) + 9);
+    memset(command, 0, strlen(content) + 9);
+    strcpy(command, "bzip2 -d ");
+    strcat(command, content);
+    if (system(command) != 0) {
+        printf("Decompress File Error!");
+        sendpacket(newsocketfd, 'U', "no");
+    }
+    else {
+        sendpacket(newsocketfd, 'U', "ok");
+    }
+    free(command);
+}
+
+void encryptFile(char* content) {
+    char* command = (char*)malloc(strlen(content) + 100);
+    memset(command, 0, strlen(content) + 100);
+    strcpy(command, "echo ");
+
+    //passphrase put in
+    readpacket(newsocketfd);
+    strcat(command, buffer.content);
+
+    strcat(command, " | gpg --passphrase-fd 0 -c ");
+    strcat(command, content);
+
+    if (system(command) != 0) {
+        printf("Encrypt File Error!");
+        sendpacket(newsocketfd, 'U', "Encrypt File Error!");
+    }
+    else {
+        sendpacket(newsocketfd, 'U', "Encrypt File succcessful!");
+    }
+    free(command);
+}
+
+void decryptFile(char* content) {
+    char* command = (char*)malloc(strlen(content) + 100);
+    memset(command, 0, strlen(content) + 100);
+    strcpy(command, "echo ");
+
+    //passphrase put in
+    readpacket(newsocketfd);
+    strcat(command, buffer.content);
+
+    strcat(command, " | gpg --passphrase-fd 0 ");
+    strcat(command, content);
+
+    if (system(command) != 0) {
+        printf("Decrypt File Error!");
+        sendpacket(newsocketfd, 'U', "Decrypt File Error!");
+    }
+    else {
+        sendpacket(newsocketfd, 'U', "Decrypt File succcessful!");
+    }
+    free(command);
+}
+
 
 void printError(char* message) {
     printf("%s\n", message);
