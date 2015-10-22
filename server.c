@@ -107,11 +107,11 @@ void main() {
 }
 
 void createFile(char* content) {
-    char* command = (char*)malloc(strlen(content) + 6);
-    memset(command, 0, sizeof(strlen(content) + 6));
-    strcat(command, "touch ");
+    char* command = (char*)malloc(strlen(content) + 8);
+    memset(command, 0, sizeof(strlen(content) + 8));
+    strcat(command, "touch \"");
     strcat(command, content);
-    printf("%s", command);
+    strcat(command, "\"");
     if (system(command) != 0) {
         printError("Create File %s Error!");
         sendpacket(newsocketfd, 'C', "no");
@@ -124,10 +124,11 @@ void createFile(char* content) {
 }
 
 void editFile(char* content) {
-    char* command = (char*)malloc(strlen(content) + 8);
-    memset(command, 0, sizeof(strlen(content) + 8));
-    strcat(command, "test -e ");
+    char* command = (char*)malloc(strlen(content) + 10);
+    memset(command, 0, sizeof(strlen(content) + 10));
+    strcat(command, "test -e \"");
     strcat(command, content);
+    strcat(command, "\"");
 
     if (system(command) != 0) {
         printf("File not exist!\n");
@@ -146,10 +147,11 @@ void editFile(char* content) {
 }
 
 void removeFile(char* content) {
-    char* command = (char*)malloc(strlen(content) + 3);
-    memset(command, 0, sizeof(strlen(content) + 3));
-    strcat(command, "rm ");
+    char* command = (char*)malloc(strlen(content) + 5);
+    memset(command, 0, sizeof(strlen(content) + 5));
+    strcat(command, "rm \"");
     strcat(command, content);
+    strcat(command, "\"");
 
     if (system(command) != 0) {
         printError("Remove File Error!");
@@ -180,10 +182,11 @@ void listFile() {
 }
 
 void downloadFile(char* content) {
-    char* command = (char*)malloc(strlen(content) + 8);
-    memset(command, 0, sizeof(strlen(content) + 8));
-    strcat(command, "test -e ");
+    char* command = (char*)malloc(strlen(content) + 10);
+    memset(command, 0, sizeof(strlen(content) + 10));
+    strcat(command, "test -e \"");
     strcat(command, content);
+    strcat(command, "\"");
 
     if (system(command) != 0) {
         printf("File not exist!\n");
@@ -208,10 +211,11 @@ void downloadFile(char* content) {
 }
 
 void zipFile(char* content) {
-    char* command = (char*)malloc(strlen(content) + 9);
-    memset(command, 0, strlen(content) + 9);
-    strcpy(command, "bzip2 -z ");
+    char* command = (char*)malloc(strlen(content) + 11);
+    memset(command, 0, strlen(content) + 11);
+    strcpy(command, "bzip2 -z \"");
     strcat(command, content);
+    strcat(command, "\"");
     if (system(command) != 0) {
         printf("Compress File Error!");
         sendpacket(newsocketfd, 'Z', "no");
@@ -223,10 +227,11 @@ void zipFile(char* content) {
 }
 
 void unzipFile(char* content) {
-    char* command = (char*)malloc(strlen(content) + 9);
-    memset(command, 0, strlen(content) + 9);
-    strcpy(command, "bzip2 -d ");
+    char* command = (char*)malloc(strlen(content) + 11);
+    memset(command, 0, strlen(content) + 11);
+    strcpy(command, "bzip2 -d \"");
     strcat(command, content);
+    strcat(command, "\"");
     if (system(command) != 0) {
         printf("Decompress File Error!");
         sendpacket(newsocketfd, 'U', "no");
@@ -250,8 +255,9 @@ void encryptFile(char* content) {
     strcat(command, buffer.content);
 
     printf("The file name is %s\n", filename);
-    strcat(command, " | gpg --yes --passphrase-fd 0 -c ");
+    strcat(command, " | gpg --yes --passphrase-fd 0 -c \"");
     strcat(command, filename);
+    strcat(command, "\"");
 
     printf("The command is %s\n", command);
     if (system(command) != 0) {
@@ -276,8 +282,9 @@ void decryptFile(char* content) {
     readpacket(newsocketfd);
     strcat(command, buffer.content);
 
-    strcat(command, " | gpg --yes --passphrase-fd 0 ");
+    strcat(command, " | gpg --yes --passphrase-fd 0 \"");
     strcat(command, filename);
+    strcat(command, "\"");
 
     if (system(command) != 0) {
         printf("Decrypt File Error!");

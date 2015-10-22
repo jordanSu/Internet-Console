@@ -51,20 +51,21 @@ void main(int args, char* argv[]) {
 void createFile(){
     char fileName[256];
     printf("Please input fileName: ");
-    scanf("%s",fileName);
+    scanf("\n");
+    gets(fileName);
     sendpacket(socketfd, 'C', fileName);
     readpacket(socketfd);
     if (strcmp(buffer.content, "ok") == 0)
         printf("File %s created succcessful!\n", fileName);
     else if (strcmp(buffer.content, "no") == 0)
         printf("File %s created failed!\n", fileName);
-
 }
 
 void editFile(){
     char fileName[256];
     printf("Please input fileName: ");
-    scanf("%s",fileName);
+    scanf("\n");
+    gets(fileName);
     sendpacket(socketfd, 'E', fileName);
     readpacket(socketfd);
     if (strcmp(buffer.content, "no") == 0)
@@ -82,7 +83,8 @@ void editFile(){
 void removeFile(){
     char fileName[256];
     printf("Please input fileName: ");
-    scanf("%s",fileName);
+    scanf("\n");
+    gets(fileName);
     sendpacket(socketfd, 'R', fileName);
     readpacket(socketfd);
     if (strcmp(buffer.content, "ok") == 0)
@@ -100,7 +102,8 @@ void listFile(){
 void download(){
     char fileName[256];
     printf("Please input fileName: ");
-    scanf("%s",fileName);
+    scanf("\n");
+    gets(fileName);
     printf("Your fileName is: %s\n",fileName);
     sendpacket(socketfd, 'D', fileName);
     readpacket(socketfd);
@@ -141,7 +144,8 @@ void zipFile() {
     else if (choice == 'U')
         sendpacket(socketfd, 'Z', "unzip");
     printf("Please input your file name: ");
-    scanf("%s", fileName);
+    scanf("\n");
+    gets(fileName);
     sendpacket(socketfd, 'Z', fileName);
     readpacket(socketfd);
     printf("%s\n", buffer.content);
@@ -162,7 +166,8 @@ void secureFile() {
         sendpacket(socketfd, 'S', "decrypt");
 
     printf("Please input your file name: ");
-    scanf("%s", fileName);
+    scanf("\n");
+    gets(fileName);
     sendpacket(socketfd, 'S', fileName);
 
     printf("Please input your passphrase: ");
@@ -202,10 +207,10 @@ void printMenu() {
 
 void choiceRouter() {
     //TODO:
-    char choice;
-    scanf("\n%c",&choice);
+    char choice[256];
+    scanf("%s",choice);
     system("clear");
-    switch (choice) {
+    switch (choice[0]) {
         case 'C': case 'c':
             printf("%s\n", "#####################");
             printf("     Create File     ");
