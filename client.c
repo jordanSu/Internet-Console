@@ -61,7 +61,7 @@ void createFile(){
         printf("File %s created failed!\n", fileName);
 }
 
-void editFile(){
+void editFile() {
     char fileName[256];
     printf("Please input fileName: ");
     scanf("\n");
@@ -70,13 +70,18 @@ void editFile(){
     readpacket(socketfd);
     if (strcmp(buffer.content, "no") == 0)
         printf("File not existed!\n");
-    else if (strcmp(buffer.content, "ok") == 0){
+    else if (strcmp(buffer.content, "ok") == 0) {
         printf("Please input the content for %s below:(1024 characters only)\n", fileName);
         printf("============================================================\n");
         char edit_Content [1024];
-        scanf("\n");
-        fgets(edit_Content, 1024, stdin);
-        sendpacket(socketfd, 'E', edit_Content);
+        while (fgets(edit_Content, 1024, stdin)) {
+            if (strcmp(edit_Content, "::exit::\n") == 0) {
+                sendpacket(socketfd, 'E', "::exit::");
+                break;
+            }
+            sendpacket(socketfd, 'E', edit_Content);
+            memset(edit_Content, 0, 1024);
+        }
     }
 }
 
@@ -220,6 +225,7 @@ void choiceRouter() {
     char choice[50];
     scanf("%s",choice);
     system("clear");
+
     switch (choice[0]) {
         case 'C': case 'c':
             printf("%s\n", "#####################");

@@ -139,8 +139,14 @@ void editFile(char* content) {
         FILE* openFile;
         openFile = fopen(content, "w");
         sendpacket(newsocketfd, 'E', "ok");
-        readpacket(newsocketfd);
-        fputs(buffer.content, openFile);
+        while (1) {
+            if (readpacket(newsocketfd) == 0) {
+                if (strcmp(buffer.content, "::exit::") == 0)
+                    break;
+                else
+                    fputs(buffer.content, openFile);
+            }
+        }
         fclose(openFile);
     }
     free(command);
