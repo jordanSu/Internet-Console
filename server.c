@@ -247,12 +247,13 @@ void encryptFile(char* content) {
     memcpy(filename, content, sizeof(content));
     char* command = (char*)malloc(strlen(filename) + 100);
     memset(command, 0, strlen(filename) + 100);
-    strcpy(command, "echo ");
+    strcpy(command, "echo \"");
     printf("The file name is %s\n", filename);
 
     //passphrase put in
     readpacket(newsocketfd);
     strcat(command, buffer.content);
+    strcat(command, "\"");
 
     printf("The file name is %s\n", filename);
     strcat(command, " | gpg --yes --passphrase-fd 0 -c \"");
@@ -276,11 +277,12 @@ void decryptFile(char* content) {
     memcpy(filename, content, sizeof(content));
     char* command = (char*)malloc(strlen(content) + 100);
     memset(command, 0, strlen(content) + 100);
-    strcpy(command, "echo ");
+    strcpy(command, "echo \"");
 
     //passphrase put in
     readpacket(newsocketfd);
     strcat(command, buffer.content);
+    strcat(command, "\"");
 
     strcat(command, " | gpg --yes --passphrase-fd 0 \"");
     strcat(command, filename);

@@ -134,15 +134,20 @@ void download(){
 }
 
 void zipFile() {
-    char choice;
+    char choice[50];
     char fileName[256];
     printf("Do you want (Z)ip or (U)nzip file?\n");
     printf("Please input Z or U: ");
-    scanf("\n%c", &choice);
-    if (choice == 'Z')
+    scanf("\n");
+    gets(choice);
+    if (choice[0] == 'Z')
         sendpacket(socketfd, 'Z', "zip");
-    else if (choice == 'U')
+    else if (choice[0] == 'U')
         sendpacket(socketfd, 'Z', "unzip");
+    else {
+        printf("Input is incorrect!\n");
+        return;
+    }
     printf("Please input your file name: ");
     scanf("\n");
     gets(fileName);
@@ -152,18 +157,23 @@ void zipFile() {
 }
 
 void secureFile() {
-    char choice;
+    char choice[50];
     char fileName[256] = {0};
     char password[100] = {0};
 
     printf("Do you want (E)ncrypt or (D)ecrypt file?\n");
     printf("Please input E or D: ");
-    scanf("\n%c", &choice);
+    scanf("\n");
+    gets(choice);
 
-    if (choice == 'E')
+    if (choice[0] == 'E')
         sendpacket(socketfd, 'S', "encrypt");
-    else if (choice == 'D')
+    else if (choice[0] == 'D')
         sendpacket(socketfd, 'S', "decrypt");
+    else {
+        printf("Input is incorrect!\n");
+        return;
+    }
 
     printf("Please input your file name: ");
     scanf("\n");
@@ -207,7 +217,7 @@ void printMenu() {
 
 void choiceRouter() {
     //TODO:
-    char choice[256];
+    char choice[50];
     scanf("%s",choice);
     system("clear");
     switch (choice[0]) {
